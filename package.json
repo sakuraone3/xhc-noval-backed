@@ -1,0 +1,23 @@
+{
+  "name": "xhc_noval_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "test": "node test-api.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "epubjs": "^0.3.93",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jszip": "^3.10.1",
+    "morgan": "^1.10.1",
+    "node-fetch": "^3.3.2"
+  }
+}

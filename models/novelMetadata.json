@@ -1,0 +1,43 @@
+{
+  "novels": [
+    {
+      "id": "your-name",
+      "title": "你的名字。",
+      "originalTitle": "君の名は。",
+      "author": "新海诚",
+      "description": "在梦中互换身体的两名少年少女，寻找彼此的故事。",
+      "coverImage": "/public/covers/your-name.jpg",
+      "publishDate": "2016-08-26",
+      "epubFile": "your-name.epub",
+      "chapterCount": 0,
+      "status": "pending",
+      "createdAt": "2025-12-02T00:00:00Z"
+    },
+    {
+      "id": "weathering-with-you",
+      "title": "天气之子",
+      "originalTitle": "天気の子",
+      "author": "新海诚",
+      "description": "能够控制天气的少女阳菜与少年帆高的故事。",
+      "coverImage": "/public/covers/weathering-with-you.jpg",
+      "publishDate": "2019-07-19",
+      "epubFile": "weathering-with-you.epub",
+      "chapterCount": 0,
+      "status": "pending",
+      "createdAt": "2025-12-02T00:00:00Z"
+    },
+    {
+      "id": "garden-of-words",
+      "title": "言叶之庭",
+      "originalTitle": "言の葉の庭",
+      "author": "新海诚",
+      "description": "以雨天的东京庭园为舞台，15岁的高中生孝雄与神秘女性雪野的故事。",
+      "coverImage": "/public/covers/garden-of-words.jpg",
+      "publishDate": "2013-05-31",
+      "epubFile": "garden-of-words.epub",
+      "chapterCount": 0,
+      "status": "pending",
+      "createdAt": "2025-12-02T00:00:00Z"
+    }
+  ]
+}
