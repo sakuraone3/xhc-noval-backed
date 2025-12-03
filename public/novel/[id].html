@@ -203,14 +203,14 @@
         // 从URL获取小说ID
         function getNovelIdFromUrl() {
             const path = window.location.pathname;
-            const match = path.match(/\/novel\/(.*)\.html/);
+            const match = path.match(/\/novel\/(.*)/);
             return match ? match[1] : null;
         }
 
         // 获取小说详情数据
         async function fetchNovelDetail(id) {
             try {
-                const response = await fetch(`/api/ssr/novel/${id}`);
+                const response = await fetch(`/api/ssr/novels/${id}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -233,10 +233,15 @@
                 return;
             }
 
+            // 修复封面图片路径
+            const coverImage = novel.coverImage ? 
+                (novel.coverImage.startsWith('/') ? novel.coverImage : `/${novel.coverImage}`) : 
+                '/epub/default-cover.jpg';
+
             container.innerHTML = `
                 <div class="novel-header">
                     <div class="novel-cover">
-                        <img src="${novel.coverImage || '/epub/default-cover.jpg'}" alt="${novel.title}">
+                        <img src="${coverImage}" alt="${novel.title}">
                     </div>
                     <div class="novel-info">
                         <h2 class="novel-title">${novel.title}</h2>
@@ -244,7 +249,7 @@
                         <p class="author">作者：${novel.author}</p>
                         <p class="publish-date">出版日期：${novel.publishDate}</p>
                         <p class="description">${novel.description}</p>
-                        <a href="/api/epub/read/${novel.epubFile}" class="read-button">开始阅读</a>
+                        <a href="/reader/${novel.id}" class="read-button">开始阅读</a>
                     </div>
                 </div>
             `;

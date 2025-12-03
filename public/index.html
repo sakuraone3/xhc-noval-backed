@@ -207,37 +207,37 @@
 
         <div id="novelsContainer" class="novels-grid">
             <!-- 直接嵌入小说数据，确保页面能正常显示 -->
-            <div class="novel-card" onclick="window.location.href='/novel/your-name'">
-                <img src="/public/covers/your-name.jpg" alt="你的名字。">
+            <div class="novel-card" onclick="window.location.href='/reader/your-name'">
+                <img src="/covers/your-name.jpg" alt="你的名字。">
                 <div class="novel-info">
                     <h2 class="novel-title">你的名字。</h2>
                     <p class="original-title">君の名は。</p>
                     <p class="author">作者：新海诚</p>
                     <p class="description">在梦中互换身体的两名少年少女，寻找彼此的故事。</p>
                     <p class="publish-date">出版日期：2016-08-26</p>
-                    <a href="/novel/your-name" class="read-button">开始阅读</a>
+                    <a href="/reader/your-name" class="read-button">开始阅读</a>
                 </div>
             </div>
-            <div class="novel-card" onclick="window.location.href='/novel/weathering-with-you'">
-                <img src="/public/covers/weathering-with-you.jpg" alt="天气之子">
+            <div class="novel-card" onclick="window.location.href='/reader/weathering-with-you'">
+                <img src="/covers/weathering-with-you.jpg" alt="天气之子">
                 <div class="novel-info">
                     <h2 class="novel-title">天气之子</h2>
                     <p class="original-title">天気の子</p>
                     <p class="author">作者：新海诚</p>
                     <p class="description">能够控制天气的少女阳菜与少年帆高的故事。</p>
                     <p class="publish-date">出版日期：2019-07-19</p>
-                    <a href="/novel/weathering-with-you" class="read-button">开始阅读</a>
+                    <a href="/reader/weathering-with-you" class="read-button">开始阅读</a>
                 </div>
             </div>
-            <div class="novel-card" onclick="window.location.href='/novel/garden-of-words'">
-                <img src="/public/covers/garden-of-words.jpg" alt="言叶之庭">
+            <div class="novel-card" onclick="window.location.href='/reader/garden-of-words'">
+                <img src="/covers/garden-of-words.jpg" alt="言叶之庭">
                 <div class="novel-info">
                     <h2 class="novel-title">言叶之庭</h2>
                     <p class="original-title">言の葉の庭</p>
                     <p class="author">作者：新海诚</p>
                     <p class="description">以雨天的东京庭园为舞台，15岁的高中生孝雄与神秘女性雪野的故事。</p>
                     <p class="publish-date">出版日期：2013-05-31</p>
-                    <a href="/novel/garden-of-words" class="read-button">开始阅读</a>
+                    <a href="/reader/garden-of-words" class="read-button">开始阅读</a>
                 </div>
             </div>
         </div>
@@ -262,7 +262,7 @@
                 if (data.success && data.data.length > 0) {
                     const container = document.getElementById('novelsContainer');
                     container.innerHTML = data.data.map(novel => `
-                        <div class="novel-card" onclick="window.location.href='/novel/${novel.id}'">
+                        <div class="novel-card" onclick="window.location.href='/reader/${novel.id}'">
                             <img src="${novel.coverImage || '/epub/default-cover.jpg'}" alt="${novel.title}">
                             <div class="novel-info">
                                 <h2 class="novel-title">${novel.title}</h2>
@@ -270,7 +270,7 @@
                                 <p class="author">作者：${novel.author}</p>
                                 <p class="description">${novel.description}</p>
                                 <p class="publish-date">出版日期：${novel.publishDate}</p>
-                                <a href="/novel/${novel.id}" class="read-button">开始阅读</a>
+                                <a href="/reader/${novel.id}" class="read-button">开始阅读</a>
                             </div>
                         </div>
                     `).join('');

@@ -19,6 +19,7 @@ app.use(express.json());
 // 静态文件服务
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/epub', express.static(path.join(__dirname, 'public/epub')));
+app.use('/covers', express.static(path.join(__dirname, 'public/covers')));
 
 // 路由配置
 app.use('/api/novels', novelsRouter);
@@ -38,6 +39,12 @@ app.get('/', (req, res) => {
 // 小说详情页动态路由
 app.get('/novel/:id', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'novel', '[id].html'));
+});
+
+// 阅读器动态路由
+app.get('/reader/:id', (req, res) => {
+  const id = req.params.id;
+  res.sendFile(path.join(__dirname, 'public/reader/index.html'));
 });
 
 // 启动服务器

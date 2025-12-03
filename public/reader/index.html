@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说阅读器 - 新海诚小说集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .reader-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        .novel-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .reader-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 100px 0;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 100px 0;
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+
+        .reader-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chapter-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chapter-content {
+            font-size: 1.1rem;
+            color: #4a5568;
+            line-height: 2;
+        }
+
+        .reader-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .prev-button, .next-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .prev-button:hover, .next-button:hover {
+            background-color: #2980b9;
+        }
+
+        .prev-button:disabled, .next-button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .reader-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .novel-title {
+                font-size: 1.3rem;
+            }
+
+            .reader-container {
+                padding: 20px;
+            }
+
+            .chapter-title {
+                font-size: 1.5rem;
+            }
+
+            .chapter-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="reader-header">
+            <a href="/" class="back-button">返回首页</a>
+            <h1 class="novel-title" id="novelTitle">小说阅读器</h1>
+        </div>
+        
+        <div class="reader-container">
+            <div id="readerContent" class="loading">正在加载小说内容...</div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 新海诚小说阅读器 - 所有权利保留</p>
+        </footer>
+    </div>
+
+    <script>
+        // 从URL获取小说ID
+        function getNovelIdFromUrl() {
+            const path = window.location.pathname;
+            const match = path.match(/\/reader\/(.*)/);
+            return match ? match[1] : null;
+        }
+
+        // 获取小说数据
+        async function fetchNovelData(id) {
+            try {
+                // 首先获取小说详情
+                const novelResponse = await fetch(`/api/ssr/novels/${id}`);
+                const novelData = await novelResponse.json();
+                
+                if (!novelData.success) {
+                    throw new Error(novelData.message);
+                }
+
+                // 获取EPUB文件列表
+                const epubResponse = await fetch(`/api/epub`);
+                const epubData = await epubResponse.json();
+                
+                if (!epubData.success) {
+                    throw new Error(epubData.message);
+                }
+
+                // 找到对应的EPUB文件
+                const epubFile = epubData.data.find(file => 
+                    file.filename.includes(novelData.data.epubFile)
+                );
+
+                if (!epubFile) {
+                    throw new Error('未找到对应的EPUB文件');
+                }
+
+                return { novel: novelData.data, epubFile };
+            } catch (error) {
+                console.error('获取小说数据失败:', error);
+                throw error;
+            }
+        }
+
+        // 渲染阅读器内容
+        function renderReaderContent(data) {
+            const container = document.getElementById('readerContent');
+            const titleElement = document.getElementById('novelTitle');
+            
+            if (!data || !data.novel) {
+                container.innerHTML = '<div class="error-message">小说数据加载失败</div>';
+                return;
+            }
+
+            // 更新页面标题
+            document.title = data.novel.title + ' - 小说阅读器';
+            titleElement.textContent = data.novel.title;
+
+            container.innerHTML = `
+                <div class="reader-content">
+                    <h2 class="chapter-title">阅读说明</h2>
+                    <div class="chapter-content">
+                        <p>欢迎阅读《${data.novel.title}》！</p>
+                        <p>这是一个简单的阅读器界面。要开始阅读，请点击下方的"开始阅读EPUB"按钮。</p>
+                        <p>当前功能正在开发中，完整的EPUB阅读体验即将推出。</p>
+                        <div style="text-align: center; margin-top: 30px;">
+                            <a href="/epub/${data.epubFile.filename}" class="prev-button" style="padding: 15px 30px; font-size: 1.1rem;">
+                                开始阅读EPUB
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 初始化
+        async function init() {
+            const novelId = getNovelIdFromUrl();
+            
+            if (!novelId) {
+                document.getElementById('readerContent').innerHTML = '<div class="error-message">未找到小说ID</div>';
+                return;
+            }
+
+            try {
+                const data = await fetchNovelData(novelId);
+                renderReaderContent(data);
+            } catch (error) {
+                document.getElementById('readerContent').innerHTML = '<div class="error-message">加载小说失败，请稍后重试</div>';
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
