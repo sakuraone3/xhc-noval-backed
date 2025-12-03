@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新海诚小说集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+
+        .search-bar {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .novels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .novel-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .novel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .novel-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .novel-info {
+            padding: 20px;
+        }
+
+        .novel-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .original-title {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .author {
+            font-size: 0.95rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .publish-date {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            margin-bottom: 15px;
+        }
+
+        .read-button {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .read-button:hover {
+            background-color: #2980b9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .novels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .novels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>新海诚小说集</h1>
+            <p class="subtitle">探索新海诚笔下的诗意世界</p>
+        </header>
+
+
+
+        <div id="novelsContainer" class="novels-grid">
+            <!-- 直接嵌入小说数据，确保页面能正常显示 -->
+            <div class="novel-card" onclick="window.location.href='/novel/your-name'">
+                <img src="/public/covers/your-name.jpg" alt="你的名字。">
+                <div class="novel-info">
+                    <h2 class="novel-title">你的名字。</h2>
+                    <p class="original-title">君の名は。</p>
+                    <p class="author">作者：新海诚</p>
+                    <p class="description">在梦中互换身体的两名少年少女，寻找彼此的故事。</p>
+                    <p class="publish-date">出版日期：2016-08-26</p>
+                    <a href="/novel/your-name" class="read-button">开始阅读</a>
+                </div>
+            </div>
+            <div class="novel-card" onclick="window.location.href='/novel/weathering-with-you'">
+                <img src="/public/covers/weathering-with-you.jpg" alt="天气之子">
+                <div class="novel-info">
+                    <h2 class="novel-title">天气之子</h2>
+                    <p class="original-title">天気の子</p>
+                    <p class="author">作者：新海诚</p>
+                    <p class="description">能够控制天气的少女阳菜与少年帆高的故事。</p>
+                    <p class="publish-date">出版日期：2019-07-19</p>
+                    <a href="/novel/weathering-with-you" class="read-button">开始阅读</a>
+                </div>
+            </div>
+            <div class="novel-card" onclick="window.location.href='/novel/garden-of-words'">
+                <img src="/public/covers/garden-of-words.jpg" alt="言叶之庭">
+                <div class="novel-info">
+                    <h2 class="novel-title">言叶之庭</h2>
+                    <p class="original-title">言の葉の庭</p>
+                    <p class="author">作者：新海诚</p>
+                    <p class="description">以雨天的东京庭园为舞台，15岁的高中生孝雄与神秘女性雪野的故事。</p>
+                    <p class="publish-date">出版日期：2013-05-31</p>
+                    <a href="/novel/garden-of-words" class="read-button">开始阅读</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 新海诚小说阅读器 - 所有权利保留</p>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的JavaScript，用于后续可能的动态功能扩展
+        console.log('新海诚小说阅读器页面加载完成');
+        
+        // 如果需要恢复动态加载，可以取消注释以下代码
+        /*
+        // 获取小说数据并渲染
+        async function loadAndRenderNovels() {
+            try {
+                const response = await fetch('/api/ssr/novels');
+                const data = await response.json();
+                
+                if (data.success && data.data.length > 0) {
+                    const container = document.getElementById('novelsContainer');
+                    container.innerHTML = data.data.map(novel => `
+                        <div class="novel-card" onclick="window.location.href='/novel/${novel.id}'">
+                            <img src="${novel.coverImage || '/epub/default-cover.jpg'}" alt="${novel.title}">
+                            <div class="novel-info">
+                                <h2 class="novel-title">${novel.title}</h2>
+                                <p class="original-title">${novel.originalTitle}</p>
+                                <p class="author">作者：${novel.author}</p>
+                                <p class="description">${novel.description}</p>
+                                <p class="publish-date">出版日期：${novel.publishDate}</p>
+                                <a href="/novel/${novel.id}" class="read-button">开始阅读</a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('加载小说数据失败:', error);
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', loadAndRenderNovels);
+        */
+    </script>
+</body>
+</html>

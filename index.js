@@ -30,6 +30,16 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'New Hai Cheng Novel API is running' });
 });
 
+// 根路径路由 - 返回小说列表页
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 小说详情页动态路由
+app.get('/novel/:id', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'novel', '[id].html'));
+});
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

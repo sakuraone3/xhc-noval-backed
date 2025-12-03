@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说详情页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        .novel-detail {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .novel-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .novel-cover {
+            flex: 0 0 auto;
+        }
+
+        .novel-cover img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .novel-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .novel-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .original-title {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .author {
+            font-size: 1.1rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .publish-date {
+            font-size: 1rem;
+            color: #95a5a6;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .read-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #2ecc71;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .read-button:hover {
+            background-color: #27ae60;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .novel-header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .novel-cover img {
+                width: 250px;
+                height: 350px;
+            }
+
+            .novel-info {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .novel-detail {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-button">返回小说列表</a>
+        
+        <div class="novel-detail">
+            <div id="novelContent" class="loading">加载中...</div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 新海诚小说阅读器 - 所有权利保留</p>
+        </footer>
+    </div>
+
+    <script>
+        // 从URL获取小说ID
+        function getNovelIdFromUrl() {
+            const path = window.location.pathname;
+            const match = path.match(/\/novel\/(.*)\.html/);
+            return match ? match[1] : null;
+        }
+
+        // 获取小说详情数据
+        async function fetchNovelDetail(id) {
+            try {
+                const response = await fetch(`/api/ssr/novel/${id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    return data.data;
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('获取小说详情失败:', error);
+                throw error;
+            }
+        }
+
+        // 渲染小说详情
+        function renderNovelDetail(novel) {
+            const container = document.getElementById('novelContent');
+            
+            if (!novel) {
+                container.innerHTML = '<div class="error-message">小说未找到</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="novel-header">
+                    <div class="novel-cover">
+                        <img src="${novel.coverImage || '/epub/default-cover.jpg'}" alt="${novel.title}">
+                    </div>
+                    <div class="novel-info">
+                        <h2 class="novel-title">${novel.title}</h2>
+                        <p class="original-title">${novel.originalTitle}</p>
+                        <p class="author">作者：${novel.author}</p>
+                        <p class="publish-date">出版日期：${novel.publishDate}</p>
+                        <p class="description">${novel.description}</p>
+                        <a href="/api/epub/read/${novel.epubFile}" class="read-button">开始阅读</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 初始化
+        async function init() {
+            const novelId = getNovelIdFromUrl();
+            
+            if (!novelId) {
+                renderNovelDetail(null);
+                return;
+            }
+
+            try {
+                const novel = await fetchNovelDetail(novelId);
+                renderNovelDetail(novel);
+                
+                // 更新页面标题
+                document.title = novel.title + ' - 新海诚小说集';
+            } catch (error) {
+                document.getElementById('novelContent').innerHTML = '<div class="error-message">加载小说失败，请稍后重试</div>';
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
