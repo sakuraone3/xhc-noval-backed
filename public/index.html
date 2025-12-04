@@ -18,6 +18,20 @@
             line-height: 1.6;
         }
 
+        /* 暗色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #e0e0e0;
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -33,6 +47,20 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        /* 暗色模式下的头部 */
+        @media (prefers-color-scheme: dark) {
+            header {
+                background-color: #2d2d2d;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark header {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
         h1 {
             font-size: 2.5rem;
             color: #2c3e50;
@@ -42,6 +70,26 @@
         .subtitle {
             font-size: 1.1rem;
             color: #7f8c8d;
+        }
+
+        /* 暗色模式下的标题和副标题 */
+        @media (prefers-color-scheme: dark) {
+            h1 {
+                color: #ffffff;
+            }
+            
+            .subtitle {
+                color: #b0b0b0;
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark h1 {
+            color: #ffffff;
+        }
+        
+        .dark .subtitle {
+            color: #b0b0b0;
         }
 
         .search-bar {
@@ -78,6 +126,20 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* 暗色模式下的小说卡片 */
+        @media (prefers-color-scheme: dark) {
+            .novel-card {
+                background-color: #2d2d2d;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark .novel-card {
+            background-color: #2d2d2d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         
         .novel-card img {
@@ -136,6 +198,50 @@
             margin-bottom: 15px;
         }
 
+        /* 暗色模式下的小说信息 */
+        @media (prefers-color-scheme: dark) {
+            .novel-title {
+                color: #ffffff;
+            }
+            
+            .original-title {
+                color: #b0b0b0;
+            }
+            
+            .author {
+                color: #64b5f6;
+            }
+            
+            .description {
+                color: #d0d0d0;
+            }
+            
+            .publish-date {
+                color: #909090;
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark .novel-title {
+            color: #ffffff;
+        }
+        
+        .dark .original-title {
+            color: #b0b0b0;
+        }
+        
+        .dark .author {
+            color: #64b5f6;
+        }
+        
+        .dark .description {
+            color: #d0d0d0;
+        }
+        
+        .dark .publish-date {
+            color: #909090;
+        }
+
         .read-button {
             display: inline-block;
             width: 100%;
@@ -153,6 +259,26 @@
             background-color: #2980b9;
         }
 
+        /* 暗色模式下的按钮 */
+        @media (prefers-color-scheme: dark) {
+            .read-button {
+                background-color: #2196f3;
+            }
+            
+            .read-button:hover {
+                background-color: #1976d2;
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark .read-button {
+            background-color: #2196f3;
+        }
+        
+        .dark .read-button:hover {
+            background-color: #1976d2;
+        }
+
         .loading {
             text-align: center;
             padding: 50px 0;
@@ -167,11 +293,43 @@
             color: #e74c3c;
         }
 
+        /* 暗色模式下的加载和错误信息 */
+        @media (prefers-color-scheme: dark) {
+            .loading {
+                color: #b0b0b0;
+            }
+            
+            .error-message {
+                color: #ef5350;
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark .loading {
+            color: #b0b0b0;
+        }
+        
+        .dark .error-message {
+            color: #ef5350;
+        }
+
         footer {
             text-align: center;
             padding: 20px 0;
             color: #7f8c8d;
             font-size: 0.9rem;
+        }
+
+        /* 暗色模式下的页脚 */
+        @media (prefers-color-scheme: dark) {
+            footer {
+                color: #b0b0b0;
+            }
+        }
+        
+        /* 或通过class选择器支持 */
+        .dark footer {
+            color: #b0b0b0;
         }
 
         @media (max-width: 768px) {
@@ -279,7 +437,7 @@
                 <div class="novel-info">
                     <h2 class="novel-title">星之声</h2>
                     <p class="original-title">ほしのこえ</p>
-                    <p class="author">作者：新海诚</p>
+                    <p class="author">作者：大场惑 (授权作家)</p>
                     <p class="description">宇宙空间中的长距离恋爱，传递着跨越光年的思念。</p>
                     <p class="publish-date">出版日期：2002-02-19</p>
                     <a href="/reader/voice-of-a-distant-star" class="read-button">开始阅读</a>
@@ -290,7 +448,7 @@
                 <div class="novel-info">
                     <h2 class="novel-title">追逐繁星的孩子</h2>
                     <p class="original-title">星を追う子ども</p>
-                    <p class="author">作者：新海诚</p>
+                    <p class="author">作者：大场惑 (授权作家)</p>
                     <p class="description">少女明日菜踏上了前往地下世界的冒险之旅。</p>
                     <p class="publish-date">出版日期：2011-05-07</p>
                     <a href="/reader/children-who-chase-lost-voices" class="read-button">开始阅读</a>
@@ -301,7 +459,7 @@
                 <div class="novel-info">
                     <h2 class="novel-title">她和她的猫</h2>
                     <p class="original-title">彼女と彼女の猫</p>
-                    <p class="author">作者：新海诚</p>
+                    <p class="author">作者：永川成基 (授权作家)</p>
                     <p class="description">从一只猫的视角，描绘了主人与猫之间的生活点滴。</p>
                     <p class="publish-date">出版日期：1999-02-22</p>
                     <a href="/reader/her-and-her-cat" class="read-button">开始阅读</a>
@@ -321,7 +479,7 @@
         </div>
 
         <footer>
-            <p>&copy; 2024 新海诚小说阅读器 - 所有权利保留</p>
+            <p>&copy; 2026 新海诚小说阅读器 - 所有权利保留</p>
         </footer>
     </div>
 
