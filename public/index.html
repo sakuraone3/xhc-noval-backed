@@ -73,24 +73,27 @@
         }
 
         .novel-card {
-            background-color: #fff;
-            border-radius: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .novel-card img {
+            width: 100%;
+            height: 415px;
+            object-fit: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .novel-card:hover img {
+            transform: scale(1.05);
         }
 
         .novel-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .novel-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            pointer-events: none;
         }
 
         .novel-info {
@@ -173,12 +176,16 @@
 
         @media (max-width: 768px) {
             .novels-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
             }
 
             h1 {
                 font-size: 2rem;
+            }
+            .novel-card img {
+                height: 415px;
+                object-fit: none;
             }
         }
 
@@ -193,6 +200,10 @@
 
             h1 {
                 font-size: 1.8rem;
+            }
+            .novel-card img {
+                height: 415px;
+                object-fit: none;
             }
         }
     </style>
