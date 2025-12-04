@@ -105,22 +105,30 @@ function extractChaptersFromNcx(ncxContent) {
     const navPoint = match[1];
     const idRegex = /id="([^"]+)"/;
     const playOrderRegex = /playOrder="([^"]+)"/;
-    const textRegex = /<text[^>]*href="([^"]+)"/;
+    const contentRegex = /<content[^>]*src="([^"]+)"/;
     const navLabelRegex = /<navLabel[^>]*>([\s\S]*?)<\/navLabel>/;
     const textContentRegex = /<text>([^<]+)<\/text>/;
     
     const id = navPoint.match(idRegex)?.[1] || '';
     const playOrder = navPoint.match(playOrderRegex)?.[1] || '';
-    const href = navPoint.match(textRegex)?.[1] || '';
+    const href = navPoint.match(contentRegex)?.[1] || '';
     const navLabel = navPoint.match(navLabelRegex)?.[1] || '';
     const title = navLabel.match(textContentRegex)?.[1] || '';
     
-    if (title && href) {
+    const trimmedTitle = title.trim();
+    const trimmedHref = href.trim();
+    
+    // 过滤掉封面章节
+    const isCoverChapter = trimmedTitle.toLowerCase().includes('封面') || 
+                          trimmedTitle.toLowerCase().includes('cover') || 
+                          trimmedHref.toLowerCase().includes('cover');
+    
+    if (trimmedTitle && trimmedHref && !isCoverChapter) {
       chapters.push({
         id,
         playOrder: parseInt(playOrder),
-        title: title.trim(),
-        href: href.trim()
+        title: trimmedTitle,
+        href: trimmedHref
       });
     }
   }
@@ -143,12 +151,39 @@ exports.getChapterContent = async (req, res) => {
     
     // 查找并读取章节文件
     let chapterContent = '';
+    let matchedFile = null;
+    
+    // 尝试多种匹配方式找到正确的章节文件
     for (const file in zip.files) {
-      if (file.endsWith(chapterHref) || file.includes(chapterHref)) {
-        chapterContent = await zip.file(file).async('string');
+      // 精确匹配整个路径
+      if (file === chapterHref) {
+        matchedFile = file;
         break;
       }
+      // 匹配路径的最后部分
+      if (file.endsWith(`/${chapterHref}`) || file.endsWith(chapterHref)) {
+        matchedFile = file;
+        break;
+      }
+      // 包含匹配（作为最后的选择）
+      if (file.includes(chapterHref) && !matchedFile) {
+        matchedFile = file;
+      }
     }
+    
+    if (matchedFile) {
+        chapterContent = await zip.file(matchedFile).async('string');
+        
+        // 修改图片路径，使其指向我们的API端点
+        const baseUrl = `${req.protocol}://${req.get('host')}/api/epub/${filename}/image`;
+        // 将所有可能的图片路径替换为API端点
+        chapterContent = chapterContent.replace(/src="\.\.\/images\/([^"]+)"/gi, `src="${baseUrl}/$1"`);
+        chapterContent = chapterContent.replace(/src="\.\.\/Images\/([^"]+)"/gi, `src="${baseUrl}/$1"`);
+        chapterContent = chapterContent.replace(/src="images\/([^"]+)"/gi, `src="${baseUrl}/$1"`);
+        chapterContent = chapterContent.replace(/src="Images\/([^"]+)"/gi, `src="${baseUrl}/$1"`);
+        chapterContent = chapterContent.replace(/src="\.\/([^"]+)"/gi, `src="${baseUrl}/$1"`);
+        chapterContent = chapterContent.replace(/src="([^"/]+\.(jpg|jpeg|png|gif|svg))"/gi, `src="${baseUrl}/$1"`);
+      }
     
     if (!chapterContent) {
       return res.status(404).json({ success: false, message: '章节内容未找到' });
@@ -164,5 +199,70 @@ exports.getChapterContent = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: '获取章节内容失败', error: error.message });
+  }
+};
+
+// 获取EPUB文件中的图片资源
+exports.getEpubImage = async (req, res) => {
+  const { filename, imagePath } = req.params;
+  const epubPath = path.join(EPUB_DIR, filename);
+  
+  try {
+    if (!fs.existsSync(epubPath)) {
+      return res.status(404).json({ success: false, message: 'EPUB文件不存在' });
+    }
+    
+    const epubData = fs.readFileSync(epubPath);
+    const zip = await JSZip.loadAsync(epubData);
+    
+    // 尝试多种匹配方式找到正确的图片文件
+    let matchedFile = null;
+    for (const file in zip.files) {
+      // 尝试不同的路径组合
+      if (file === `Images/${imagePath}` || file === `images/${imagePath}`) {
+        matchedFile = file;
+        break;
+      }
+      if (file.endsWith(`/Images/${imagePath}`) || file.endsWith(`/images/${imagePath}`)) {
+        matchedFile = file;
+        break;
+      }
+      if (file.includes(`Images/${imagePath}`) || file.includes(`images/${imagePath}`)) {
+        matchedFile = file;
+      }
+      // 直接匹配文件名（不包含路径）
+      if (file.endsWith(`/${imagePath}`) || file === imagePath) {
+        matchedFile = file;
+        break;
+      }
+      // 查找所有图片文件并匹配文件名
+      const filename = path.basename(file).toLowerCase();
+      if (filename === imagePath.toLowerCase()) {
+        matchedFile = file;
+        break;
+      }
+    }
+    
+    if (!matchedFile) {
+      return res.status(404).json({ success: false, message: '图片资源未找到' });
+    }
+    
+    // 获取图片内容并返回
+    const imageContent = await zip.file(matchedFile).async('nodebuffer');
+    
+    // 设置正确的Content-Type
+    const ext = path.extname(matchedFile).toLowerCase();
+    const contentType = {
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.gif': 'image/gif',
+      '.svg': 'image/svg+xml'
+    }[ext] || 'image/jpeg';
+    
+    res.set('Content-Type', contentType);
+    res.send(imageContent);
+  } catch (error) {
+    res.status(500).json({ success: false, message: '获取图片资源失败', error: error.message });
   }
 };

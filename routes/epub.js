@@ -6,5 +6,6 @@ const epubController = require('../controllers/epubController');
 router.get('/', epubController.getEpubList); // 获取所有EPUB文件列表
 router.get('/:filename/metadata', epubController.parseEpubMetadata); // 获取EPUB文件元数据
 router.get('/:filename/chapters/:chapterHref', epubController.getChapterContent); // 获取章节内容
+router.get('/:filename/image/*imagePath', epubController.getEpubImage); // 获取EPUB文件中的图片资源
 
 module.exports = router;
