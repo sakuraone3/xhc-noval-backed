@@ -29,14 +29,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 
 // 静态文件服务
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/epub', express.static(path.join(__dirname, 'public/epub')));
-app.use('/covers', express.static(path.join(__dirname, 'public/covers')));
+app.use('/cover', express.static(path.join(__dirname, 'public/cover')));
 
 // 路由配置
 app.use('/api/novels', novelsRouter);
