@@ -11,7 +11,24 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // 中间件配置
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", "http://localhost:3001"],
+      connectSrc: ["'self'", "http://localhost:3001"],
+    },
+  },
+}));
+
+// 设置Cross-Origin-Resource-Policy中间件
+app.use((req, res, next) => {
+  res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+});
+
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());

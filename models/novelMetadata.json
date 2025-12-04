@@ -40,7 +40,7 @@
       "createdAt": "2025-12-02T00:00:00Z"
     },
     {
-      "id": "the-garden-of-words",
+      "id": "voice-of-a-distant-star",
       "title": "星之声",
       "originalTitle": "ほしのこえ",
       "author": "新海诚",
@@ -79,12 +79,12 @@
       "createdAt": "2025-12-02T00:00:00Z"
     },
     {
-      "id": "the-place-promised-in-our-early-days",
+      "id": "beyond-the-clouds",
       "title": "云之彼端，约定的地方",
       "originalTitle": "雲のむこう、約束の場所",
       "author": "新海诚",
       "description": "讲述了两位少年与一位少女在战争背景下的友情与爱情故事。",
-      "coverImage": "/public/covers/the-place-promised-in-our-early-days.jpg",
+      "coverImage": "/public/covers/beyond-the-clouds.jpg",
       "publishDate": "2004-11-20",
       "epubFile": "云之彼端，约定的地方.epub",
       "chapterCount": 0,
