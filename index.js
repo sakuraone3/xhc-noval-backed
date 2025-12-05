@@ -1,3 +1,8 @@
+// Load environment variables
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local'
+});
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -10,6 +15,18 @@ const ssrRouter = require('./routes/ssr');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Get environment variables
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
+
+// Parse frontend URLs for CORS
+const frontendOrigins = [FRONTEND_URL];
+// Add production URLs if they are different from local
+if (FRONTEND_URL !== 'http://localhost:3000') {
+  frontendOrigins.push(API_BASE_URL.replace('3001', '3000'));
+  frontendOrigins.push(API_BASE_URL.replace('http://', 'http://').split(':3001')[0]);
+}
+
 // 中间件配置
 app.use(helmet({
   contentSecurityPolicy: {
@@ -17,8 +34,8 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"],
-      imgSrc: ["'self'", "http://localhost:3001"],
-      connectSrc: ["'self'", "http://localhost:3001"],
+      imgSrc: ["'self'", API_BASE_URL],
+      connectSrc: ["'self'", API_BASE_URL, FRONTEND_URL],
     },
   },
 }));
@@ -30,7 +47,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: frontendOrigins,
   credentials: true,
 }));
 app.use(morgan('dev'));
@@ -48,7 +65,7 @@ app.use('/api/ssr', ssrRouter);
 
 // 健康检查路由
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'New Hai Cheng Novel API is running' });
+  res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
 // 根路径路由 - 返回小说列表页
@@ -58,7 +75,7 @@ app.get('/', (req, res) => {
 
 // 小说详情页动态路由
 app.get('/novel/:id', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'novel', '[id].html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // 阅读器动态路由
@@ -70,4 +87,7 @@ app.get('/reader/:id', (req, res) => {
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`API Base URL: ${API_BASE_URL}`);
+  console.log(`Allowed Origins: ${frontendOrigins.join(', ')}`);
 });
