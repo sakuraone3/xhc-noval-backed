@@ -116,6 +116,19 @@
       "chapterCount": 0,
       "status": "pending",
       "createdAt": "2025-12-02T00:00:00Z"
+    },
+    {
+      "id": "one-more-stop",
+      "title": "多停一站",
+      "originalTitle": "One More Stop",
+      "author": "小宇",
+      "description": "故事从七月末的一趟地铁开始。那天的时间，好像偷偷多停了一会儿。",
+      "coverImage": "/cover/多停一站.jpg",
+      "publishDate": "2026-09-23",
+      "epubFile": "多停一站.epub",
+      "chapterCount": 7,
+      "status": "completed",
+      "createdAt": "2026-09-23T00:00:00Z"
     }
   ]
 }
